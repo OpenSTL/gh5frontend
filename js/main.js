@@ -1,22 +1,29 @@
+var bindDatePicker = function () {
+    $('.date-of-birth').datepicker({
+        startView: 2,
+        orientation: 'top auto',
+        autoclose: true
+    });
+};
+
+bindDatePicker();
 var $body = $('body');
 
 $body.on('click', '.resources', function () {
     var mainContent = _.template($('#resources').html());
     $('.main-content').html(mainContent());
 });
-$body.on('click', '.citation-yes', function () {
-    var mainContent = _.template($('#yes-form').html());
-    $('.main-content').html(mainContent({yesOrNo: true}));
+$body.on('click', '.look-up', function () {
+    var mainContent = _.template($('#form').html());
+    $('.main-content').html(mainContent({}));
+    bindDatePicker();
 });
 
-$body.on('click', '.citation-no', function () {
-    var mainContent = _.template($('#yes-form').html());
-    $('.main-content').html(mainContent({yesOrNo: false}));
+$body.on('click', '.alternatepayments', function () {
+    var mainContent = _.template($('#alternatepayments').html());
+    $('.main-content').html(mainContent());
 });
-$body.on('click', '.look-up', function () {
-    var mainContent = _.template($('#look-up').html());
-    $('.main-content').html(mainContent({}));
-});
+
 $body.on('click', '.nav-links', function () {
     $('#navbar').removeClass('in');
     $(this).closest('li').addClass('active').siblings().removeClass('active');
@@ -33,7 +40,7 @@ $body.on('click', '.submit-form', function () {
 
     $('.server-error').remove();
 
-    var citationNumber = $('.citation-number').val(),
+    var importantNumber = $('.important-number').val(),
         driversLicense = $('.drivers-license').val(),
         lastName = $('.last-name').val(),
         dateOfBirth = $('.date-of-birth').val();
@@ -42,7 +49,7 @@ $body.on('click', '.submit-form', function () {
         type: 'GET',
         url: 'http://globalhack5.herokuapp.com/get_info_special',
         data: {
-            citation: citationNumber,
+            important_number: importantNumber,
             last_name: lastName,
             date_of_birth: dateOfBirth,
             drivers_license_number: driversLicense
@@ -59,14 +66,19 @@ $body.on('click', '.submit-form', function () {
             }
         },
         error: function () {
-
+            var mainContent = _.template($('#no-citations').html());
+            $('.main-content').prepend(mainContent({message: 'A really bad error occurred.'}));
         }
     });
 });
 
-var threeViolations = function () {
-    $('.citation-number').val('282415157');
-    $('.drivers-license').val('L814561589');
+var threeViolationsWDL = function () {
+    $('.important-number').val('L814561589');
+    $('.last-name').val('Jones');
+    $('.date-of-birth').val('10/17/1962');
+};
+var threeViolationsWCN = function () {
+    $('.important-number').val('282415157');
     $('.last-name').val('Jones');
     $('.date-of-birth').val('10/17/1962');
 };
